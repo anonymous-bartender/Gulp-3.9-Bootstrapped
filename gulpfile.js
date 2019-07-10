@@ -26,7 +26,7 @@ path = {
 
 gulp.task('html', function() {
     gulp.src(path.html)
-    .pipe(htmlMin({ collapseWhitespace: true }))
+    // .pipe(htmlMin({ collapseWhitespace: true }))
     .pipe(gulp.dest(path.public.html));
 })
 
@@ -53,8 +53,8 @@ gulp.task('img', function() {
 })
 
 gulp.task('watch', function(cb) {
-    gulp.watch(path.styles, ['scss']);
-    gulp.watch(path.scripts, ['js']);
+    gulp.watch(path.styles, ['scss']).on('change', browserSync.reload);
+    gulp.watch(path.scripts, ['js']).on('change', browserSync.reload);
     gulp.watch(path.html, [ 'html' ]).on('change', browserSync.reload);
     // gulp.watch(['scss/**/*.scss', 'scripts/**/*.js', './**/*.html']).on('change', browserSync.reload);
 })
