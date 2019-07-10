@@ -33,6 +33,7 @@
     "gulp-sass": "4.0.2",
     "gulp-scss": "1.4.0",
     "gulp-sequence": "1.0.0",
-    "gulp-uglify": "3.0.2"
+    "gulp-uglify": "3.0.2",
+    "run-sequence": "2.2.1"
   }
 }
