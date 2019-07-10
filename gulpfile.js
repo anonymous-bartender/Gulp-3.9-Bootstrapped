@@ -1,13 +1,10 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    scss = require("gulp-scss"),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     browserSync = require('browser-sync'),
-    htmlMin = require('gulp-htmlmin'),
     cleanCSS = require('gulp-clean-css'),
     del = require('del'),
-    gulpSequence = require('gulp-sequence'),
     runSequence = require('run-sequence').use(gulp);
 
 path = {
@@ -27,7 +24,6 @@ path = {
 
 gulp.task('html', function() {
     gulp.src(path.html)
-    // .pipe(htmlMin({ collapseWhitespace: true }))
     .pipe(gulp.dest(path.public.html));
 })
 
@@ -57,7 +53,6 @@ gulp.task('watch', function(cb) {
     gulp.watch(path.styles, ['scss']).on('change', browserSync.reload);
     gulp.watch(path.scripts, ['js']).on('change', browserSync.reload);
     gulp.watch(path.html, [ 'html' ]).on('change', browserSync.reload);
-    // gulp.watch(['scss/**/*.scss', 'scripts/**/*.js', './**/*.html']).on('change', browserSync.reload);
 })
 
 gulp.task('mywatch', function(cb) {
@@ -78,6 +73,6 @@ gulp.task('browserSync', function() {
 gulp.task('default', ['clean', 'html', 'scss', 'js', 'browserSync']);
 
 
-gulp.task('h', function() {
+gulp.task('serve', function() {
     runSequence('clean', 'html', 'scss', 'js', 'browserSync', 'watch');
 })
