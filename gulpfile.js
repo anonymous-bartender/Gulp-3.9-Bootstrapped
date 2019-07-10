@@ -5,7 +5,9 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     browserSync = require('browser-sync'),
     htmlMin = require('gulp-htmlmin'),
-    cleanCSS = require('gulp-clean-css');
+    cleanCSS = require('gulp-clean-css'),
+    del = require('del'),
+    gulpSequence = require('gulp-sequence');
 
 path = {
     'scripts': 'scripts/**/*.js',
@@ -43,13 +45,17 @@ gulp.task('js', function() {
     .pipe(gulp.dest(path.public.js));
 })
 
+gulp.task('clean', function() {
+    del('public');
+})
+
 gulp.task('img', function() {
 })
 
 gulp.task('watch', function(cb) {
-    gulp.watch(path.scripts).on('change', 'js');
-    gulp.watch(path.styles).on('change', 'scss');
-    cb();
+    gulp.watch(path.styles, ['scss']);
+    gulp.watch(path.scripts, ['js']);
+    gulp.watch(path.html, [ 'html' ]).on('change', browserSync.reload);
     // gulp.watch(['scss/**/*.scss', 'scripts/**/*.js', './**/*.html']).on('change', browserSync.reload);
 })
 
@@ -62,4 +68,5 @@ gulp.task('browserSync', function() {
 })
 
 
-gulp.task('default', ['html', 'scss', 'js', 'browserSync', 'watch']);
+// gulp.task('default', ['clean', 'html', 'scss', 'js', 'browserSync', 'watch']);
+gulp.task('default', gulpSequence('clean', 'html', 'scss', 'js', 'browserSync', 'watch'));
