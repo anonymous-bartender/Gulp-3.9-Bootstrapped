@@ -4,7 +4,7 @@
   "description": "Boilarplate for Front End developers with Gulp 3.9.1, FontAwesome 4, Bootstrap 4, JQuery, HTML5, SCSS",
   "main": "app.js",
   "scripts": {
-    "dev": "gulp serve"
+    "dev": "gulp"
   },
   "repository": {
     "type": "git",
