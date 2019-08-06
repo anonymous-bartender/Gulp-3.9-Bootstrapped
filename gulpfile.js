@@ -11,68 +11,115 @@ path = {
     'scripts': 'scripts/**/*.js',
     'styles': 'scss/**/*.scss',
     'html': './*.html',
-    'images': 'images/**/*.{jpg,svg,png}',
+    'img': 'img/**/*.{jpg,svg,png}',
     'fonts': 'fonts/**/*.{ttf}',
+    'vendor': {
+        'css': 'vendor/css/**/*.css',
+        'js': 'vendor/js/**/*.js'
+    },
     'public': {
         'html': './public/',
         'js': 'public/js/',
         'css': 'public/css/',
-        'images': 'public/img/',
+        'img': 'public/img/',
         'fonts': 'public/fonts/'
     }
 }
 
+
+gulp.task('clean', function() {
+    del.sync(['./public/**','!./public/']);
+});
+
+// HTML
 gulp.task('html', function() {
     gulp.src(path.html)
     .pipe(gulp.dest(path.public.html));
-})
+});
 
+// Stylesheets SCSS
 gulp.task('scss', function() {
-    gulp.src(path.styles)
-    .pipe(sass().on('error', sass.logError))
-    .pipe(cleanCSS({compatibility: 'ie8'}))
-    .pipe(concat('stylesheet.css'))
-    .pipe(gulp.dest(path.public.css));
-})
+    return gulp.src(path.styles)
+                .pipe(sass())
+                .pipe(concat('stylesheet.css'))
+                .pipe(cleanCSS({compatibility: 'ie8'}))
+                .pipe(gulp.dest(path.public.css));
+});
 
+// Javascripts
 gulp.task('js', function() {
-    gulp.src(path.scripts)
-    .pipe(uglify())
-    .pipe(concat('bundle.js'))
-    .pipe(gulp.dest(path.public.js));
-})
+    return gulp.src(path.scripts)
+                .pipe(concat('bundle.js'))
+                .pipe(uglify())
+                .pipe(gulp.dest(path.public.js));
+});
 
-gulp.task('clean', function() {
-    del('./public/');
-})
-
+// Images
 gulp.task('img', function() {
-})
+    gulp.src(path.img)
+                .pipe(gulp.dest(path.public.img));
+});
 
-gulp.task('watch', function(cb) {
-    gulp.watch(path.styles, ['scss']).on('change', browserSync.reload);
-    gulp.watch(path.scripts, ['js']).on('change', browserSync.reload);
-    gulp.watch(path.html, [ 'html' ]).on('change', browserSync.reload);
-})
+// FOnts
+gulp.task('fonts', function() {
+    gulp.src(path.fonts)
+                .pipe(gulp.dest(path.public.fonts));
+});
 
-gulp.task('mywatch', function(cb) {
-    gulp.watch([path.scss]).on('change', function() {
-        del (path.public.css);
-    })
-})
+// Favicon
+gulp.task('favicon', function() {
+    gulp.src('favicon.ico')
+                .pipe(gulp.dest(path.public.html));
+});
 
+// Vendor JS CSS
+gulp.task('vendor', function() {
+    gulp.src(path.vendor.css)
+                .pipe(concat('vendor.css'))
+                .pipe(cleanCSS({compatibility: 'ie8'}))
+                .pipe(gulp.dest(path.public.css));
+    
+    gulp.src(path.vendor.js)
+                .pipe(concat('vendor.js'))
+                .pipe(uglify())
+                .pipe(gulp.dest(path.public.js));
+});
+
+// Server BrowserSync
 gulp.task('browserSync', function() {
     browserSync.init({
         server: {
             baseDir: path.public.html
         }
     });
+});
+
+// #####################################################################
+gulp.task('build', function() {
+    runSequence('clean','html', 'scss', 'js', 'img', 'fonts', 'favicon', 'vendor');
+});
+
+gulp.task('watch', function(cb) {
+    gulp.watch(path.styles, ['scss']).on('change', browserSync.reload);
+    gulp.watch(path.scripts, ['js']).on('change', browserSync.reload);
+    gulp.watch(path.html, [ 'html' ]).on('change', browserSync.reload);
+    cb();
 })
 
-
-gulp.task('default', ['clean', 'html', 'scss', 'js', 'browserSync']);
-
-
-gulp.task('serve', function() {
-    runSequence('clean', 'html', 'scss', 'js', 'browserSync', 'watch');
+gulp.task('default', function() {
+    return runSequence('build', 'browserSync', 'watch');
 })
+
+// #####################################################################
+
+
+gulp.task('mywatch', function(cb) {
+    gulp.watch([path.scss, path.scripts, path.html]).on('change', gulp.run('build'));
+    cb();
+});
+
+gulp.task('serve', ['build'], function() {
+    gulp.run('browserSync');
+});
+
+// #####################################################################
