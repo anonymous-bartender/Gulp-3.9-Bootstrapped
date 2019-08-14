@@ -1,0 +1,56 @@
+
+$c1: #FFFFFF;
+$c2: #F5F5F5;
+$c3: #333333;
+$c4: #000;
+
+.bg-1 {
+    background-color: $c2;
+}
+
+.bg-2 {
+    background-color: $c3;
+    h1,p {
+        color: $c1;
+    }
+    
+}
+
+section {
+    background-color: $c2;
+
+    ::selection {
+        color: $c1;
+        background: $c3;
+    }
+
+}
+
+
+.text-hover-animated {
+    transition: all 0.5s ease-in-out;
+    color: $c3;
+    background-color: transparent;
+}
+
+.text-hover-animated:hover {
+    transition: all 0.5s ease-in-out;
+    color: $c1;
+    background-color: $c3;
+}
+
+
+
+// Backgrounds
+section#landing {
+    background-color: $c1;
+}
+
+section#skills {
+    background-color: $c2;
+}
+
+section#featured-project {
+    background-color: $c3;
+    color: $c2;
+}
