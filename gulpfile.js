@@ -22,10 +22,8 @@ path = {
         'js': 'public/js/',
         'css': 'public/css/',
         'img': 'public/img/',
-        'fonts': 'public/fonts/',
-        'assets': 'public/assets/'
-    },
-    'assets': 'assets/**/*.{txt,pdf}'
+        'fonts': 'public/fonts/'
+    }
 }
 
 
@@ -60,12 +58,6 @@ gulp.task('js', function() {
 gulp.task('img', function() {
     gulp.src(path.img)
                 .pipe(gulp.dest(path.public.img));
-});
-
-// assets
-gulp.task('assets', function() {
-    gulp.src(path.assets)
-                .pipe(gulp.dest(path.public.assets));
 });
 
 // FOnts
@@ -104,7 +96,7 @@ gulp.task('browserSync', function() {
 
 // #####################################################################
 gulp.task('build', function() {
-    runSequence('clean','html', 'scss', 'js', 'img', 'fonts', 'favicon', 'vendor', 'assets');
+    runSequence('clean','html', 'scss', 'js', 'img', 'fonts', 'favicon', 'vendor');
 });
 
 gulp.task('watch', function(cb) {
